@@ -1,6 +1,7 @@
 package br.com.gestaoclean.mapper;
 
 import br.com.gestaoclean.dto.ClienteResponseDTO;
+import br.com.gestaoclean.dto.ClienteRequestDTO;
 import br.com.gestaoclean.entity.Cliente;
 import org.springframework.stereotype.Component;
 
@@ -26,5 +27,15 @@ public class ClienteMapper {
         return clientes.stream()
                 .map(this::toDTO)
                 .toList();
+    }
+    public Cliente toEntity(ClienteRequestDTO dto) {
+        return Cliente.builder()
+                .nome(dto.getNome())
+                .telefone(dto.getTelefone())
+                .email(dto.getEmail())
+                .cpf(dto.getCpf())
+                .observacoes(dto.getObservacoes())
+                .ativo(true)
+                .build();
     }
 }
