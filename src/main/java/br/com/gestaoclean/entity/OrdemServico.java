@@ -25,6 +25,10 @@ public class OrdemServico {
     @Column(name = "data_criacao", nullable = false)
     private LocalDateTime dataCriacao;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusOrdemServico status;
+
     @Column(columnDefinition = "TEXT")
     private String observacoes;
 }

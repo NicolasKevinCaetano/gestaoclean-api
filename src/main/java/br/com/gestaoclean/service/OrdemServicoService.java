@@ -4,6 +4,7 @@ import br.com.gestaoclean.dto.OrdemServicoRequestDTO;
 import br.com.gestaoclean.dto.OrdemServicoResponseDTO;
 import br.com.gestaoclean.entity.Agendamento;
 import br.com.gestaoclean.entity.OrdemServico;
+import br.com.gestaoclean.entity.StatusOrdemServico;
 import br.com.gestaoclean.exception.ResourceNotFoundException;
 import br.com.gestaoclean.mapper.OrdemServicoMapper;
 import br.com.gestaoclean.repository.AgendamentoRepository;
@@ -54,6 +55,7 @@ public class OrdemServicoService {
         OrdemServico ordemServico = OrdemServico.builder()
                 .agendamento(agendamento)
                 .dataCriacao(LocalDateTime.now())
+                .status(StatusOrdemServico.ABERTA)
                 .observacoes(dto.getObservacoes())
                 .build();
 
@@ -61,4 +63,49 @@ public class OrdemServicoService {
 
         return ordemServicoMapper.toResponseDTO(salva);
     }
+
+    public OrdemServicoResponseDTO atualizarStatus(
+            Long id,
+            StatusOrdemServico novoStatus) {
+
+        OrdemServico ordemServico = ordemServicoRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Ordem de Serviço não encontrada"));
+
+        StatusOrdemServico statusAtual = ordemServico.getStatus();
+
+        if (statusAtual == StatusOrdemServico.FINALIZADA) {
+            throw new IllegalStateException(
+                    "Ordem de Serviço finalizada não pode ter o status alterado");
+        }
+
+        if (statusAtual == StatusOrdemServico.CANCELADA) {
+            throw new IllegalStateException(
+                    "Ordem de Serviço cancelada não pode ter o status alterado");
+        }
+
+        if (statusAtual == StatusOrdemServico.ABERTA
+                && novoStatus != StatusOrdemServico.EM_EXECUCAO
+                && novoStatus != StatusOrdemServico.CANCELADA) {
+
+            throw new IllegalStateException(
+                    "Ordem de Serviço ABERTA só pode ser colocada em execução ou cancelada");
+        }
+
+        if (statusAtual == StatusOrdemServico.EM_EXECUCAO
+                && novoStatus != StatusOrdemServico.FINALIZADA
+                && novoStatus != StatusOrdemServico.CANCELADA) {
+
+            throw new IllegalStateException(
+                    "Ordem de Serviço em execução só pode ser finalizada ou cancelada");
+        }
+
+        ordemServico.setStatus(novoStatus);
+
+        OrdemServico salva = ordemServicoRepository.save(ordemServico);
+
+        return ordemServicoMapper.toResponseDTO(salva);
+    }
+
 }

@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+import br.com.gestaoclean.dto.StatusOrdemServicoRequestDTO;
 
 @RestController
 @RequestMapping("/ordens-servico")
@@ -40,5 +40,16 @@ public class OrdemServicoController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<OrdemServicoResponseDTO> atualizarStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody StatusOrdemServicoRequestDTO dto) {
+
+        OrdemServicoResponseDTO response =
+                ordemServicoService.atualizarStatus(id, dto.getStatus());
+
+        return ResponseEntity.ok(response);
     }
 }
