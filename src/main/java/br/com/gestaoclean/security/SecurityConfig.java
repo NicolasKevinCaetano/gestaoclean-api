@@ -8,14 +8,17 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/clientes/**", "/agendamentos/**").permitAll()
+                        .requestMatchers(
+                                "/clientes/**",
+                                "/agendamentos/**",
+                                "/ordens-servico/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 );
 
