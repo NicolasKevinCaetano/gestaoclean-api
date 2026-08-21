@@ -25,6 +25,6 @@ public class OrdemServico {
     @Column(name = "data_criacao", nullable = false)
     private LocalDateTime dataCriacao;
 
-    @Column(name = "observacoes")
+    @Column(columnDefinition = "TEXT")
     private String observacoes;
 }
