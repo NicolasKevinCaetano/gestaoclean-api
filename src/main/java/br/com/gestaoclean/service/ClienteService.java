@@ -3,6 +3,7 @@ package br.com.gestaoclean.service;
 import br.com.gestaoclean.dto.ClienteResponseDTO;
 import br.com.gestaoclean.dto.ClienteRequestDTO;
 import br.com.gestaoclean.entity.Cliente;
+import br.com.gestaoclean.exception.ResourceNotFoundException;
 import br.com.gestaoclean.mapper.ClienteMapper;
 import br.com.gestaoclean.repository.ClienteRepository;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ public class ClienteService {
 
     public ClienteResponseDTO buscarPorId(Long id) {
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Cliente não encontrado"));
 
         return clienteMapper.toDTO(cliente);
     }
@@ -42,7 +44,8 @@ public class ClienteService {
     public void excluir(Long id) {
 
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Cliente não encontrado"));
 
         cliente.setAtivo(false);
 
@@ -52,7 +55,8 @@ public class ClienteService {
     public ClienteResponseDTO atualizar(Long id, ClienteRequestDTO dto) {
 
         Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Cliente não encontrado"));
 
         cliente.setNome(dto.getNome());
         cliente.setTelefone(dto.getTelefone());
