@@ -1,6 +1,8 @@
 package br.com.gestaoclean.service;
 
+
 import br.com.gestaoclean.dto.OrdemServicoRequestDTO;
+import org.springframework.transaction.annotation.Transactional;
 import br.com.gestaoclean.dto.OrdemServicoResponseDTO;
 import br.com.gestaoclean.entity.Agendamento;
 import br.com.gestaoclean.entity.OrdemServico;
@@ -71,6 +73,7 @@ public class OrdemServicoService {
         return ordemServicoMapper.toResponseDTO(salva);
     }
 
+    @Transactional
     public OrdemServicoResponseDTO atualizarStatus(
             Long id,
             StatusOrdemServico novoStatus) {
@@ -109,6 +112,22 @@ public class OrdemServicoService {
         }
 
         ordemServico.setStatus(novoStatus);
+
+        Agendamento agendamento = ordemServico.getAgendamento();
+
+        if (novoStatus == StatusOrdemServico.EM_EXECUCAO) {
+            agendamento.setStatus(StatusAgendamento.CONFIRMADO);
+        }
+
+        if (novoStatus == StatusOrdemServico.FINALIZADA) {
+            agendamento.setStatus(StatusAgendamento.REALIZADO);
+        }
+
+        if (novoStatus == StatusOrdemServico.CANCELADA) {
+            agendamento.setStatus(StatusAgendamento.CANCELADO);
+        }
+
+        agendamentoRepository.save(agendamento);
 
         OrdemServico salva = ordemServicoRepository.save(ordemServico);
 
