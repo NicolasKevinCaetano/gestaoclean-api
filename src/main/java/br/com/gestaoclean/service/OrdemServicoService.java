@@ -4,6 +4,7 @@ import br.com.gestaoclean.dto.OrdemServicoRequestDTO;
 import br.com.gestaoclean.dto.OrdemServicoResponseDTO;
 import br.com.gestaoclean.entity.Agendamento;
 import br.com.gestaoclean.entity.OrdemServico;
+import br.com.gestaoclean.entity.StatusAgendamento;
 import br.com.gestaoclean.entity.StatusOrdemServico;
 import br.com.gestaoclean.exception.ResourceNotFoundException;
 import br.com.gestaoclean.mapper.OrdemServicoMapper;
@@ -51,6 +52,12 @@ public class OrdemServicoService {
         Agendamento agendamento = agendamentoRepository.findById(dto.getAgendamentoId())
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Agendamento não encontrado"));
+
+        if (agendamento.getStatus() == StatusAgendamento.CANCELADO) {
+            throw new IllegalStateException(
+                    "Não é possível criar uma Ordem de Serviço para um agendamento cancelado"
+            );
+        }
 
         OrdemServico ordemServico = OrdemServico.builder()
                 .agendamento(agendamento)
@@ -106,6 +113,26 @@ public class OrdemServicoService {
         OrdemServico salva = ordemServicoRepository.save(ordemServico);
 
         return ordemServicoMapper.toResponseDTO(salva);
+    }
+
+    public OrdemServicoResponseDTO buscarPorAgendamento(Long agendamentoId) {
+
+        OrdemServico ordemServico = ordemServicoRepository
+                .findByAgendamentoId(agendamentoId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(
+                                "Ordem de Serviço não encontrada para este agendamento"));
+
+        return ordemServicoMapper.toResponseDTO(ordemServico);
+    }
+
+    public List<OrdemServicoResponseDTO> listarPorStatus(
+            StatusOrdemServico status) {
+
+        return ordemServicoRepository.findByStatus(status)
+                .stream()
+                .map(ordemServicoMapper::toResponseDTO)
+                .toList();
     }
 
 }

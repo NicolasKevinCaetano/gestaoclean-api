@@ -2,6 +2,7 @@ package br.com.gestaoclean.controller;
 
 import br.com.gestaoclean.dto.OrdemServicoRequestDTO;
 import br.com.gestaoclean.dto.OrdemServicoResponseDTO;
+import br.com.gestaoclean.entity.StatusOrdemServico;
 import br.com.gestaoclean.service.OrdemServicoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +20,27 @@ public class OrdemServicoController {
     private final OrdemServicoService ordemServicoService;
 
     @GetMapping
-    public ResponseEntity<List<OrdemServicoResponseDTO>> listarTodos() {
-        return ResponseEntity.ok(ordemServicoService.listarTodos());
+    public ResponseEntity<List<OrdemServicoResponseDTO>> listarTodos(
+            @RequestParam(required = false) StatusOrdemServico status) {
+
+        if (status != null) {
+            return ResponseEntity.ok(
+                    ordemServicoService.listarPorStatus(status)
+            );
+        }
+
+        return ResponseEntity.ok(
+                ordemServicoService.listarTodos()
+        );
+    }
+
+    @GetMapping("/agendamento/{agendamentoId}")
+    public ResponseEntity<OrdemServicoResponseDTO> buscarPorAgendamento(
+            @PathVariable Long agendamentoId) {
+
+        return ResponseEntity.ok(
+                ordemServicoService.buscarPorAgendamento(agendamentoId)
+        );
     }
 
     @GetMapping("/{id}")
@@ -52,4 +72,6 @@ public class OrdemServicoController {
 
         return ResponseEntity.ok(response);
     }
+
+
 }
