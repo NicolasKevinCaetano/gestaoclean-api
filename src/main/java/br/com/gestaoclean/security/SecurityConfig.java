@@ -17,7 +17,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/clientes/**",
                                 "/agendamentos/**",
-                                "/ordens-servico/**"
+                                "/ordens-servico/**",
+                                "/pagamentos/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );
