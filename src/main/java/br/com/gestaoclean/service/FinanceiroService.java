@@ -2,6 +2,7 @@ package br.com.gestaoclean.service;
 
 import br.com.gestaoclean.dto.ResumoFinanceiroDTO;
 import br.com.gestaoclean.entity.StatusPagamento;
+import br.com.gestaoclean.repository.DespesaRepository;
 import br.com.gestaoclean.repository.PagamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 public class FinanceiroService {
 
     private final PagamentoRepository pagamentoRepository;
+    private final DespesaService despesaService;
 
     public ResumoFinanceiroDTO obterResumo() {
 
@@ -58,5 +60,30 @@ public class FinanceiroService {
                 inicioDateTime,
                 fimDateTime
         );
+    }
+
+    public BigDecimal obterTotalDespesasPorPeriodo(
+            LocalDate inicio,
+            LocalDate fim) {
+
+        return despesaService.listarPorPeriodo(inicio, fim)
+                .stream()
+                .map(despesa -> despesa.getValor())
+                .reduce(
+                        BigDecimal.ZERO,
+                        BigDecimal::add
+                );
+    }
+    public BigDecimal obterSaldoPorPeriodo(
+            LocalDate inicio,
+            LocalDate fim) {
+
+        BigDecimal totalRecebido =
+                obterTotalRecebidoPorPeriodo(inicio, fim);
+
+        BigDecimal totalDespesas =
+                obterTotalDespesasPorPeriodo(inicio, fim);
+
+        return totalRecebido.subtract(totalDespesas);
     }
 }

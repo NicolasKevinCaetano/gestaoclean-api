@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import br.com.gestaoclean.dto.ResumoFinanceiroPeriodoDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -38,6 +39,35 @@ public class FinanceiroController {
         return ResponseEntity.ok(
                 financeiroService.obterTotalRecebidoPorPeriodo(inicio, fim)
         );
+    }
+
+    @GetMapping("/resumo/periodo")
+    public ResponseEntity<ResumoFinanceiroPeriodoDTO> obterResumoPorPeriodo(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate inicio,
+
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate fim) {
+
+        BigDecimal totalRecebido =
+                financeiroService.obterTotalRecebidoPorPeriodo(inicio, fim);
+
+        BigDecimal totalDespesas =
+                financeiroService.obterTotalDespesasPorPeriodo(inicio, fim);
+
+        BigDecimal saldo =
+                financeiroService.obterSaldoPorPeriodo(inicio, fim);
+
+        ResumoFinanceiroPeriodoDTO resumo =
+                ResumoFinanceiroPeriodoDTO.builder()
+                        .totalRecebido(totalRecebido)
+                        .totalDespesas(totalDespesas)
+                        .saldo(saldo)
+                        .build();
+
+        return ResponseEntity.ok(resumo);
     }
 }
 
