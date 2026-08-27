@@ -19,7 +19,8 @@ public class SecurityConfig {
                                 "/agendamentos/**",
                                 "/ordens-servico/**",
                                 "/pagamentos/**",
-                                "/financeiro/**"
+                                "/financeiro/**",
+                                "/despesas/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );
