@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +44,19 @@ public class FinanceiroService {
                 .quantidadePagamentosPendentes(quantidadePagamentosPendentes)
                 .quantidadePagamentosCancelados(quantidadePagamentosCancelados)
                 .build();
+    }
+
+    public BigDecimal obterTotalRecebidoPorPeriodo(
+            LocalDate inicio,
+            LocalDate fim) {
+
+        LocalDateTime inicioDateTime = inicio.atStartOfDay();
+        LocalDateTime fimDateTime = fim.atTime(23, 59, 59);
+
+        return pagamentoRepository.somarPorStatusEPeriodo(
+                StatusPagamento.PAGO,
+                inicioDateTime,
+                fimDateTime
+        );
     }
 }

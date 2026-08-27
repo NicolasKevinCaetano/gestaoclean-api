@@ -3,10 +3,12 @@ package br.com.gestaoclean.controller;
 import br.com.gestaoclean.dto.ResumoFinanceiroDTO;
 import br.com.gestaoclean.service.FinanceiroService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/financeiro")
@@ -20,6 +22,21 @@ public class FinanceiroController {
 
         return ResponseEntity.ok(
                 financeiroService.obterResumo()
+        );
+    }
+
+    @GetMapping("/recebido")
+    public ResponseEntity<BigDecimal> obterTotalRecebidoPorPeriodo(
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate inicio,
+
+            @RequestParam
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+            LocalDate fim) {
+
+        return ResponseEntity.ok(
+                financeiroService.obterTotalRecebidoPorPeriodo(inicio, fim)
         );
     }
 }
