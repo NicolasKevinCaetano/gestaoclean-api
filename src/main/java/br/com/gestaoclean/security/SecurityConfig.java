@@ -20,7 +20,8 @@ public class SecurityConfig {
                                 "/ordens-servico/**",
                                 "/pagamentos/**",
                                 "/financeiro/**",
-                                "/despesas/**"
+                                "/despesas/**",
+                                "/dashboard/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 );

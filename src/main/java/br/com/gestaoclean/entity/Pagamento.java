@@ -35,6 +35,9 @@ public class Pagamento {
     @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
 
+    @Column(name = "data_cancelamento")
+    private LocalDateTime dataCancelamento;
+
     @Column(length = 30)
     private String formaPagamento;
 

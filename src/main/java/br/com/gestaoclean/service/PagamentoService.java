@@ -39,6 +39,7 @@ public class PagamentoService {
 
         pagamento.setStatus(StatusPagamento.PENDENTE);
         pagamento.setDataPagamento(null);
+        pagamento.setDataCancelamento(null);
 
         pagamento = pagamentoRepository.save(pagamento);
 
@@ -94,6 +95,7 @@ public class PagamentoService {
 
         pagamento.setStatus(StatusPagamento.PAGO);
         pagamento.setDataPagamento(LocalDateTime.now());
+        pagamento.setDataCancelamento(null);
 
         pagamento = pagamentoRepository.save(pagamento);
 
@@ -117,6 +119,7 @@ public class PagamentoService {
         }
 
         pagamento.setStatus(StatusPagamento.CANCELADO);
+        pagamento.setDataCancelamento(LocalDateTime.now());
 
         pagamento = pagamentoRepository.save(pagamento);
 

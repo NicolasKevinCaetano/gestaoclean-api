@@ -86,4 +86,69 @@ public class FinanceiroService {
 
         return totalRecebido.subtract(totalDespesas);
     }
+
+    public ResumoFinanceiroDTO obterResumoPorPeriodo(
+            LocalDate inicio,
+            LocalDate fim) {
+
+        LocalDateTime inicioDateTime = inicio.atStartOfDay();
+        LocalDateTime fimDateTime = fim.atTime(23, 59, 59);
+
+        BigDecimal totalRecebido =
+                pagamentoRepository.somarPorStatusEPeriodo(
+                        StatusPagamento.PAGO,
+                        inicioDateTime,
+                        fimDateTime
+                );
+
+        BigDecimal totalPendente =
+                pagamentoRepository.somarPorStatusEPeriodo(
+                        StatusPagamento.PENDENTE,
+                        inicioDateTime,
+                        fimDateTime
+                );
+
+        BigDecimal totalCancelado =
+                pagamentoRepository.somarPorStatusEPeriodo(
+                        StatusPagamento.CANCELADO,
+                        inicioDateTime,
+                        fimDateTime
+                );
+
+        long quantidadePagamentosPagos =
+                pagamentoRepository
+                        .findByStatusAndDataPagamentoBetween(
+                                StatusPagamento.PAGO,
+                                inicioDateTime,
+                                fimDateTime
+                        )
+                        .size();
+
+        long quantidadePagamentosPendentes =
+                pagamentoRepository
+                        .findByStatusAndDataPagamentoBetween(
+                                StatusPagamento.PENDENTE,
+                                inicioDateTime,
+                                fimDateTime
+                        )
+                        .size();
+
+        long quantidadePagamentosCancelados =
+                pagamentoRepository
+                        .findByStatusAndDataPagamentoBetween(
+                                StatusPagamento.CANCELADO,
+                                inicioDateTime,
+                                fimDateTime
+                        )
+                        .size();
+
+        return ResumoFinanceiroDTO.builder()
+                .totalRecebido(totalRecebido)
+                .totalPendente(totalPendente)
+                .totalCancelado(totalCancelado)
+                .quantidadePagamentosPagos(quantidadePagamentosPagos)
+                .quantidadePagamentosPendentes(quantidadePagamentosPendentes)
+                .quantidadePagamentosCancelados(quantidadePagamentosCancelados)
+                .build();
+    }
 }

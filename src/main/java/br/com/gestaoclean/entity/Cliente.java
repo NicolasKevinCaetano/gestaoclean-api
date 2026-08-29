@@ -38,6 +38,7 @@ public class Cliente {
     @Column(columnDefinition = "TEXT")
     private String observacoes;
 
+    @Builder.Default
     @Column(nullable = false)
     private Boolean ativo = true;
 

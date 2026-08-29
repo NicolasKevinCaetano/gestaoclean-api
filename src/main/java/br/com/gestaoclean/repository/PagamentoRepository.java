@@ -16,6 +16,18 @@ public interface PagamentoRepository extends JpaRepository<Pagamento, Long> {
 
     List<Pagamento> findByStatus(StatusPagamento status);
 
+    List<Pagamento> findByStatusAndDataPagamentoBetween(
+            StatusPagamento status,
+            LocalDateTime inicio,
+            LocalDateTime fim
+    );
+
+    List<Pagamento> findByStatusAndDataCancelamentoBetween(
+            StatusPagamento status,
+            LocalDateTime inicio,
+            LocalDateTime fim
+    );
+
     @Query("""
             SELECT COALESCE(SUM(p.valor), 0)
             FROM Pagamento p
