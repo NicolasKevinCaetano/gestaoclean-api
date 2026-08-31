@@ -32,6 +32,10 @@ public class Pagamento {
     @Column(nullable = false, length = 20)
     private StatusPagamento status;
 
+    @Column(name = "data_criacao", nullable = false)
+    @Builder.Default
+    private LocalDateTime dataCriacao = LocalDateTime.now();
+
     @Column(name = "data_pagamento")
     private LocalDateTime dataPagamento;
 

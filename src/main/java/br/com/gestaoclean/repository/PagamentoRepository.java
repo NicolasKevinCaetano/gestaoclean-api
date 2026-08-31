@@ -22,11 +22,19 @@ public interface PagamentoRepository extends JpaRepository<Pagamento, Long> {
             LocalDateTime fim
     );
 
+    List<Pagamento> findByStatusAndDataCriacaoBetween(
+            StatusPagamento status,
+            LocalDateTime inicio,
+            LocalDateTime fim
+    );
+
     List<Pagamento> findByStatusAndDataCancelamentoBetween(
             StatusPagamento status,
             LocalDateTime inicio,
             LocalDateTime fim
     );
+
+
 
     @Query("""
             SELECT COALESCE(SUM(p.valor), 0)
@@ -46,6 +54,32 @@ public interface PagamentoRepository extends JpaRepository<Pagamento, Long> {
             @Param("inicio") LocalDateTime inicio,
             @Param("fim") LocalDateTime fim
     );
+
+    @Query("""
+        SELECT COALESCE(SUM(p.valor), 0)
+        FROM Pagamento p
+        WHERE p.status = :status
+        AND p.dataCriacao BETWEEN :inicio AND :fim
+        """)
+    BigDecimal somarPorStatusEDataCriacao(
+            @Param("status") StatusPagamento status,
+            @Param("inicio") LocalDateTime inicio,
+            @Param("fim") LocalDateTime fim
+    );
+
+    @Query("""
+        SELECT COALESCE(SUM(p.valor), 0)
+        FROM Pagamento p
+        WHERE p.status = :status
+        AND p.dataCancelamento BETWEEN :inicio AND :fim
+        """)
+    BigDecimal somarPorStatusEDataCancelamento(
+            @Param("status") StatusPagamento status,
+            @Param("inicio") LocalDateTime inicio,
+            @Param("fim") LocalDateTime fim
+    );
+
+
 }
 
 

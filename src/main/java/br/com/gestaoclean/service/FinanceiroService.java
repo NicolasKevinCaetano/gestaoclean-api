@@ -2,7 +2,6 @@ package br.com.gestaoclean.service;
 
 import br.com.gestaoclean.dto.ResumoFinanceiroDTO;
 import br.com.gestaoclean.entity.StatusPagamento;
-import br.com.gestaoclean.repository.DespesaRepository;
 import br.com.gestaoclean.repository.PagamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -74,6 +73,7 @@ public class FinanceiroService {
                         BigDecimal::add
                 );
     }
+
     public BigDecimal obterSaldoPorPeriodo(
             LocalDate inicio,
             LocalDate fim) {
@@ -102,14 +102,14 @@ public class FinanceiroService {
                 );
 
         BigDecimal totalPendente =
-                pagamentoRepository.somarPorStatusEPeriodo(
+                pagamentoRepository.somarPorStatusEDataCriacao(
                         StatusPagamento.PENDENTE,
                         inicioDateTime,
                         fimDateTime
                 );
 
         BigDecimal totalCancelado =
-                pagamentoRepository.somarPorStatusEPeriodo(
+                pagamentoRepository.somarPorStatusEDataCancelamento(
                         StatusPagamento.CANCELADO,
                         inicioDateTime,
                         fimDateTime
@@ -126,7 +126,7 @@ public class FinanceiroService {
 
         long quantidadePagamentosPendentes =
                 pagamentoRepository
-                        .findByStatusAndDataPagamentoBetween(
+                        .findByStatusAndDataCriacaoBetween(
                                 StatusPagamento.PENDENTE,
                                 inicioDateTime,
                                 fimDateTime
@@ -135,7 +135,7 @@ public class FinanceiroService {
 
         long quantidadePagamentosCancelados =
                 pagamentoRepository
-                        .findByStatusAndDataPagamentoBetween(
+                        .findByStatusAndDataCancelamentoBetween(
                                 StatusPagamento.CANCELADO,
                                 inicioDateTime,
                                 fimDateTime
