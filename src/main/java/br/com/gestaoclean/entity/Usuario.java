@@ -3,6 +3,7 @@ package br.com.gestaoclean.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import br.com.gestaoclean.enums.PerfilUsuario;
 import lombok.*;
 
 @Entity
@@ -34,7 +35,7 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Builder.Default
-    private br.com.gestaoclean.entity.PerfilUsuario perfil = br.com.gestaoclean.entity.PerfilUsuario.USER;
+    private PerfilUsuario perfil = PerfilUsuario.USER;
 
     @Column(nullable = false)
     @Builder.Default

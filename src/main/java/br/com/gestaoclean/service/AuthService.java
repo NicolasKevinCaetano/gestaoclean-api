@@ -3,7 +3,7 @@ package br.com.gestaoclean.service;
 import br.com.gestaoclean.dto.LoginRequestDTO;
 import br.com.gestaoclean.dto.LoginResponseDTO;
 import br.com.gestaoclean.dto.UsuarioRequestDTO;
-import br.com.gestaoclean.entity.PerfilUsuario;
+import br.com.gestaoclean.enums.PerfilUsuario;
 import br.com.gestaoclean.entity.Usuario;
 import br.com.gestaoclean.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +40,17 @@ public class AuthService {
     }
 
     public LoginResponseDTO login(LoginRequestDTO dto) {
+
+        Usuario usuario = usuarioRepository.findByEmail(dto.getEmail())
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        System.out.println("EMAIL ENCONTRADO: " + usuario.getEmail());
+        System.out.println("PERFIL: " + usuario.getPerfil());
+        System.out.println("ATIVO: " + usuario.getAtivo());
+        System.out.println(
+                "SENHA CONFERE: " +
+                        passwordEncoder.matches(dto.getSenha(), usuario.getSenha())
+        );
 
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

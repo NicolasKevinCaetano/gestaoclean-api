@@ -1,7 +1,7 @@
-package br.com.gestaoclean.entity;
+package br.com.gestaoclean.enums;
 
 public enum PerfilUsuario {
-
+    USER,
     ADMIN,
-    USER
+    FUNCIONARIO
 }
