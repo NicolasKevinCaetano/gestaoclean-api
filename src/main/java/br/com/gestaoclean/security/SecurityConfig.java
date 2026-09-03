@@ -27,6 +27,18 @@ public class SecurityConfig {
                                 "/agendamentos/**")
                         .hasAnyRole("ADMIN", "FUNCIONARIO")
 
+                        .requestMatchers(HttpMethod.POST,
+                                "/agendamentos/**")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
+
+                        .requestMatchers(HttpMethod.PUT,
+                                "/agendamentos/**")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
+
+                        .requestMatchers(HttpMethod.DELETE,
+                                "/agendamentos/**")
+                        .hasRole("ADMIN")
+
                         .requestMatchers("/financeiro/**")
                         .hasRole("ADMIN")
 
