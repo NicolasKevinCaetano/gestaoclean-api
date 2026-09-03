@@ -1,5 +1,7 @@
 package br.com.gestaoclean.controller;
 
+import br.com.gestaoclean.dto.LoginRequestDTO;
+import br.com.gestaoclean.dto.LoginResponseDTO;
 import br.com.gestaoclean.dto.UsuarioRequestDTO;
 import br.com.gestaoclean.service.AuthService;
 import jakarta.validation.Valid;
@@ -21,5 +23,12 @@ public class AuthController {
         authService.registrar(dto);
 
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDTO> login(
+            @Valid @RequestBody LoginRequestDTO dto) {
+
+        return ResponseEntity.ok(authService.login(dto));
     }
 }
