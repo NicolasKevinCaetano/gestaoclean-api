@@ -28,16 +28,23 @@ public class SecurityConfig {
                         .hasAnyRole("ADMIN", "FUNCIONARIO")
 
                         .requestMatchers(HttpMethod.POST,
+                                "/clientes/**",
                                 "/agendamentos/**")
                         .hasAnyRole("ADMIN", "FUNCIONARIO")
 
                         .requestMatchers(HttpMethod.PUT,
+                                "/clientes/**",
                                 "/agendamentos/**")
                         .hasAnyRole("ADMIN", "FUNCIONARIO")
 
                         .requestMatchers(HttpMethod.DELETE,
+                                "/clientes/**",
                                 "/agendamentos/**")
                         .hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.PATCH,
+                                "/agendamentos/*/cancelar")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
 
                         .requestMatchers("/financeiro/**")
                         .hasRole("ADMIN")

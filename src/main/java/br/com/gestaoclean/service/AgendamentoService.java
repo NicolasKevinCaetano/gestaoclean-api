@@ -181,6 +181,29 @@ public class AgendamentoService {
                 .toList();
     }
 
+    public AgendamentoResponseDTO cancelar(Long id) {
+
+        Agendamento agendamento = agendamentoRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Agendamento não encontrado"));
+
+        if (agendamento.getStatus() == StatusAgendamento.REALIZADO) {
+            throw new IllegalStateException(
+                    "Agendamento realizado não pode ser cancelado");
+        }
+
+        if (agendamento.getStatus() == StatusAgendamento.CANCELADO) {
+            throw new IllegalStateException(
+                    "Agendamento já está cancelado");
+        }
+
+        agendamento.setStatus(StatusAgendamento.CANCELADO);
+
+        Agendamento atualizado = agendamentoRepository.save(agendamento);
+
+        return AgendamentoMapper.toResponseDTO(atualizado);
+    }
+
     private void validarTransicaoStatus(
             StatusAgendamento statusAtual,
             StatusAgendamento novoStatus) {
