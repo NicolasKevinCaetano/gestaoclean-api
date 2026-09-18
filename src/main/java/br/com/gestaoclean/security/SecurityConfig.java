@@ -38,7 +38,10 @@ public class SecurityConfig {
                         .hasAnyRole("ADMIN", "FUNCIONARIO")
 
                         .requestMatchers(HttpMethod.DELETE,
-                                "/clientes/**",
+                                "/clientes/**")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
+
+                        .requestMatchers(HttpMethod.DELETE,
                                 "/agendamentos/**")
                         .hasRole("ADMIN")
 

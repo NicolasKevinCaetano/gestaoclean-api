@@ -24,6 +24,7 @@ public class ClienteResponseDTO {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
+        this.email = email;
         this.cpf = cpf;
         this.observacoes = observacoes;
         this.ativo = ativo;

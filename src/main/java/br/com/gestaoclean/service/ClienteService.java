@@ -58,6 +58,11 @@ public class ClienteService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Cliente não encontrado"));
 
+        if (!cliente.getAtivo()) {
+            throw new IllegalStateException(
+                    "Cliente inativo não pode ser atualizado");
+        }
+
         cliente.setNome(dto.getNome());
         cliente.setTelefone(dto.getTelefone());
         cliente.setEmail(dto.getEmail());
