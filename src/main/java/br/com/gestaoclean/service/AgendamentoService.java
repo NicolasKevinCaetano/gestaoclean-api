@@ -56,6 +56,12 @@ public class AgendamentoService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Cliente não encontrado"));
 
+
+        if (!cliente.getAtivo()) {
+            throw new IllegalStateException(
+                    "Não é possível criar agendamento para cliente inativo");
+        }
+
         Agendamento agendamento = AgendamentoMapper.toEntity(dto, cliente);
 
         Agendamento salvo = agendamentoRepository.save(agendamento);
@@ -86,6 +92,10 @@ public class AgendamentoService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Cliente não encontrado"));
 
+        if (!cliente.getAtivo()) {
+            throw new IllegalStateException(
+                    "Não é possível associar agendamento a cliente inativo");
+        }
 
         agendamento.setCliente(cliente);
         agendamento.setDataAgendamento(dto.getDataAgendamento());
