@@ -47,6 +47,11 @@ public class ClienteService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Cliente não encontrado"));
 
+        if (!cliente.getAtivo()) {
+            throw new IllegalStateException(
+                    "Cliente já está inativo");
+        }
+
         cliente.setAtivo(false);
 
         clienteRepository.save(cliente);
@@ -68,6 +73,24 @@ public class ClienteService {
         cliente.setEmail(dto.getEmail());
         cliente.setCpf(dto.getCpf());
         cliente.setObservacoes(dto.getObservacoes());
+
+        Cliente atualizado = clienteRepository.save(cliente);
+
+        return clienteMapper.toDTO(atualizado);
+    }
+
+    public ClienteResponseDTO reativar(Long id) {
+
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Cliente não encontrado"));
+
+        if (cliente.getAtivo()) {
+            throw new IllegalStateException(
+                    "Cliente já está ativo");
+        }
+
+        cliente.setAtivo(true);
 
         Cliente atualizado = clienteRepository.save(cliente);
 

@@ -54,6 +54,15 @@ public class ClienteController {
         return ResponseEntity.ok(atualizado);
     }
 
+    @PatchMapping("/{id}/reativar")
+    public ResponseEntity<ClienteResponseDTO> reativar(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(
+                clienteService.reativar(id)
+        );
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(
             @PathVariable Long id) {

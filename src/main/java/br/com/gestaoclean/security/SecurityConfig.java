@@ -49,6 +49,10 @@ public class SecurityConfig {
                                 "/agendamentos/*/cancelar")
                         .hasAnyRole("ADMIN", "FUNCIONARIO")
 
+                        .requestMatchers(HttpMethod.PATCH,
+                                "/clientes/*/reativar")
+                        .hasAnyRole("ADMIN", "FUNCIONARIO")
+
                         .requestMatchers("/financeiro/**")
                         .hasRole("ADMIN")
 
