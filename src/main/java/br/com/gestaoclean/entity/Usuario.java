@@ -34,8 +34,7 @@ public class Usuario {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    @Builder.Default
-    private PerfilUsuario perfil = PerfilUsuario.USER;
+    private PerfilUsuario perfil;
 
     @Column(nullable = false)
     @Builder.Default

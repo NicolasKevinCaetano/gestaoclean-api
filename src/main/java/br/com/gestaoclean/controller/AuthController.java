@@ -16,14 +16,6 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping("/registrar")
-    public ResponseEntity<Void> registrar(
-            @Valid @RequestBody UsuarioRequestDTO dto) {
-
-        authService.registrar(dto);
-
-        return ResponseEntity.ok().build();
-    }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(
