@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import br.com.gestaoclean.dto.UsuarioAtualizacaoRequestDTO;
+import br.com.gestaoclean.dto.UsuarioSenhaRequestDTO;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -62,5 +64,25 @@ public class UsuarioController {
         return ResponseEntity.ok(
                 usuarioService.reativar(id)
         );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UsuarioResponseDTO> atualizar(
+            @PathVariable Long id,
+            @Valid @RequestBody UsuarioAtualizacaoRequestDTO dto) {
+
+        return ResponseEntity.ok(
+                usuarioService.atualizar(id, dto)
+        );
+    }
+
+    @PatchMapping("/{id}/senha")
+    public ResponseEntity<Void> alterarSenha(
+            @PathVariable Long id,
+            @Valid @RequestBody UsuarioSenhaRequestDTO dto) {
+
+        usuarioService.alterarSenha(id, dto);
+
+        return ResponseEntity.noContent().build();
     }
 }

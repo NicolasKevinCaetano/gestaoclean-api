@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import br.com.gestaoclean.exception.ResourceNotFoundException;
+import br.com.gestaoclean.dto.UsuarioAtualizacaoRequestDTO;
+import br.com.gestaoclean.dto.UsuarioSenhaRequestDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +56,36 @@ public class UsuarioService {
                 );
 
         return toResponseDTO(usuario);
+    }
+
+    public UsuarioResponseDTO atualizar(
+            Long id,
+            UsuarioAtualizacaoRequestDTO dto) {
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Usuário não encontrado")
+                );
+
+        if (usuario.getPerfil() == PerfilUsuario.ADMIN) {
+            throw new IllegalStateException(
+                    "Administrador não pode ser atualizado por este recurso"
+            );
+        }
+
+        usuarioRepository.findByEmail(dto.getEmail())
+                .filter(outroUsuario ->
+                        !outroUsuario.getId().equals(id))
+                .ifPresent(outroUsuario -> {
+                    throw new IllegalStateException("E-mail já cadastrado");
+                });
+
+        usuario.setNome(dto.getNome());
+        usuario.setEmail(dto.getEmail());
+
+        Usuario atualizado = usuarioRepository.save(usuario);
+
+        return toResponseDTO(atualizado);
     }
 
     private UsuarioResponseDTO toResponseDTO(Usuario usuario) {
@@ -113,5 +145,27 @@ public class UsuarioService {
         Usuario salvo = usuarioRepository.save(usuario);
 
         return toResponseDTO(salvo);
+    }
+
+    public void alterarSenha(
+            Long id,
+            UsuarioSenhaRequestDTO dto) {
+
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Usuário não encontrado")
+                );
+
+        if (usuario.getPerfil() == PerfilUsuario.ADMIN) {
+            throw new IllegalStateException(
+                    "Senha do administrador não pode ser alterada por este recurso"
+            );
+        }
+
+        usuario.setSenha(
+                passwordEncoder.encode(dto.getNovaSenha())
+        );
+
+        usuarioRepository.save(usuario);
     }
 }
