@@ -75,11 +75,6 @@ public class AgendamentoService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Agendamento não encontrado"));
 
-        validarTransicaoStatus(
-                agendamento.getStatus(),
-                dto.getStatus()
-        );
-
         if (agendamentoRepository.existsByDataAgendamentoAndIdNot(
                 dto.getDataAgendamento(),
                 id)) {
@@ -117,7 +112,6 @@ public class AgendamentoService {
         }
 
 
-        agendamento.setStatus(dto.getStatus());
         agendamento.setObservacoes(dto.getObservacoes());
 
         Agendamento atualizado = agendamentoRepository.save(agendamento);
@@ -214,25 +208,4 @@ public class AgendamentoService {
         return AgendamentoMapper.toResponseDTO(atualizado);
     }
 
-    private void validarTransicaoStatus(
-            StatusAgendamento statusAtual,
-            StatusAgendamento novoStatus) {
-
-        if (statusAtual == StatusAgendamento.REALIZADO) {
-            throw new IllegalStateException(
-                    "Agendamento realizado não pode ter o status alterado");
-        }
-
-        if (statusAtual == StatusAgendamento.CANCELADO) {
-            throw new IllegalStateException(
-                    "Agendamento cancelado não pode ter o status alterado");
-        }
-
-        if (statusAtual == StatusAgendamento.AGENDADO &&
-                novoStatus == StatusAgendamento.REALIZADO) {
-
-            throw new IllegalStateException(
-                    "Um agendamento deve ser confirmado antes de ser realizado");
-        }
-    }
 }

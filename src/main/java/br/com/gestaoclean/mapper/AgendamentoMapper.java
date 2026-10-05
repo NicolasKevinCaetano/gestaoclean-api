@@ -6,6 +6,7 @@ import br.com.gestaoclean.dto.ItemAgendamentoResponseDTO;
 import br.com.gestaoclean.entity.Agendamento;
 import br.com.gestaoclean.entity.Cliente;
 import br.com.gestaoclean.entity.ItemAgendamento;
+import br.com.gestaoclean.entity.StatusAgendamento;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,7 +18,7 @@ public class AgendamentoMapper {
         Agendamento agendamento = Agendamento.builder()
                 .cliente(cliente)
                 .dataAgendamento(dto.getDataAgendamento())
-                .status(dto.getStatus())
+                .status(StatusAgendamento.AGENDADO)
                 .observacoes(dto.getObservacoes())
                 .build();
 

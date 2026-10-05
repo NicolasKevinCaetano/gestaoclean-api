@@ -1,6 +1,5 @@
 package br.com.gestaoclean.dto;
 
-import br.com.gestaoclean.entity.StatusAgendamento;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -23,9 +22,6 @@ public class AgendamentoRequestDTO {
 
     @NotNull(message = "Os itens do agendamento são obrigatórios")
     private List<@Valid ItemAgendamentoRequestDTO> itens;
-
-    @NotNull
-    private StatusAgendamento status;
 
     private String observacoes;
 }

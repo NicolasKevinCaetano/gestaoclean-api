@@ -61,6 +61,12 @@ public class OrdemServicoService {
             );
         }
 
+        if (agendamento.getStatus() == StatusAgendamento.REALIZADO) {
+            throw new IllegalStateException(
+                    "Não é possível criar uma Ordem de Serviço para um agendamento realizado"
+            );
+        }
+
         OrdemServico ordemServico = OrdemServico.builder()
                 .agendamento(agendamento)
                 .dataCriacao(LocalDateTime.now())
