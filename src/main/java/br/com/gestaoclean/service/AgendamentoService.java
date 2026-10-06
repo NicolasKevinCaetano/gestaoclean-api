@@ -14,19 +14,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import br.com.gestaoclean.entity.ItemAgendamento;
 import java.util.List;
+import br.com.gestaoclean.repository.OrdemServicoRepository;
 
 @Service
 public class AgendamentoService {
 
     private final AgendamentoRepository agendamentoRepository;
     private final ClienteRepository clienteRepository;
+    private final OrdemServicoRepository ordemServicoRepository;
 
     public AgendamentoService(
             AgendamentoRepository agendamentoRepository,
-            ClienteRepository clienteRepository) {
+            ClienteRepository clienteRepository,
+            OrdemServicoRepository ordemServicoRepository) {
 
         this.agendamentoRepository = agendamentoRepository;
         this.clienteRepository = clienteRepository;
+        this.ordemServicoRepository = ordemServicoRepository;
     }
 
     public List<AgendamentoResponseDTO> listarTodos() {
@@ -199,6 +203,11 @@ public class AgendamentoService {
         if (agendamento.getStatus() == StatusAgendamento.CANCELADO) {
             throw new IllegalStateException(
                     "Agendamento já está cancelado");
+        }
+
+        if (ordemServicoRepository.existsByAgendamentoId(id)) {
+            throw new IllegalStateException(
+                    "Agendamento com Ordem de Serviço deve ser cancelado pela Ordem de Serviço");
         }
 
         agendamento.setStatus(StatusAgendamento.CANCELADO);
