@@ -79,6 +79,16 @@ public class AgendamentoService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Agendamento não encontrado"));
 
+        if (agendamento.getStatus() != StatusAgendamento.AGENDADO) {
+            throw new IllegalStateException(
+                    "Somente agendamentos com status AGENDADO podem ser editados");
+        }
+
+        if (ordemServicoRepository.existsByAgendamentoId(id)) {
+            throw new IllegalStateException(
+                    "Agendamento com Ordem de Serviço não pode ser editado");
+        }
+
         if (agendamentoRepository.existsByDataAgendamentoAndIdNot(
                 dto.getDataAgendamento(),
                 id)) {
