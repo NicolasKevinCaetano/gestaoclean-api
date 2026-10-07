@@ -11,6 +11,7 @@ import br.com.gestaoclean.repository.OrdemServicoRepository;
 import br.com.gestaoclean.repository.PagamentoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import br.com.gestaoclean.exception.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,11 +29,11 @@ public class PagamentoService {
 
         OrdemServico ordemServico = ordemServicoRepository.findById(ordemServicoId)
                 .orElseThrow(() ->
-                        new RuntimeException("Ordem de Serviço não encontrada"));
+                        new ResourceNotFoundException("Ordem de Serviço não encontrada"));
 
-        if (ordemServico.getStatus() == StatusOrdemServico.CANCELADA) {
-            throw new RuntimeException(
-                    "Não é possível criar pagamento para uma Ordem de Serviço cancelada");
+        if (ordemServico.getStatus() != StatusOrdemServico.FINALIZADA) {
+            throw new IllegalStateException(
+                    "Pagamento só pode ser criado para Ordem de Serviço finalizada");
         }
 
         Pagamento pagamento = PagamentoMapper.toEntity(dto, ordemServico);
@@ -50,7 +51,7 @@ public class PagamentoService {
             Long ordemServicoId) {
 
         if (!ordemServicoRepository.existsById(ordemServicoId)) {
-            throw new RuntimeException("Ordem de Serviço não encontrada");
+            throw new ResourceNotFoundException("Ordem de Serviço não encontrada");
         }
 
         return pagamentoRepository.findByOrdemServicoId(ordemServicoId)
@@ -72,7 +73,7 @@ public class PagamentoService {
 
         Pagamento pagamento = pagamentoRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Pagamento não encontrado"));
+                        new ResourceNotFoundException("Pagamento não encontrado"));
 
         return PagamentoMapper.toResponseDTO(pagamento);
     }
@@ -81,15 +82,15 @@ public class PagamentoService {
 
         Pagamento pagamento = pagamentoRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Pagamento não encontrado"));
+                        new ResourceNotFoundException("Pagamento não encontrado"));
 
         if (pagamento.getStatus() == StatusPagamento.CANCELADO) {
-            throw new RuntimeException(
+            throw new IllegalStateException(
                     "Pagamento cancelado não pode ser marcado como pago");
         }
 
         if (pagamento.getStatus() == StatusPagamento.PAGO) {
-            throw new RuntimeException(
+            throw new IllegalStateException(
                     "Pagamento já está pago");
         }
 
@@ -106,15 +107,15 @@ public class PagamentoService {
 
         Pagamento pagamento = pagamentoRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Pagamento não encontrado"));
+                        new ResourceNotFoundException("Pagamento não encontrado"));
 
         if (pagamento.getStatus() == StatusPagamento.CANCELADO) {
-            throw new RuntimeException(
+            throw new IllegalStateException(
                     "Pagamento já está cancelado");
         }
 
         if (pagamento.getStatus() == StatusPagamento.PAGO) {
-            throw new RuntimeException(
+            throw new IllegalStateException(
                     "Pagamento pago não pode ser cancelado");
         }
 

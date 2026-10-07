@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import br.com.gestaoclean.exception.ResourceNotFoundException;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +40,7 @@ public class DespesaService {
 
         Despesa despesa = despesaRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Despesa não encontrada"));
+                        new ResourceNotFoundException("Despesa não encontrada"));
 
         return DespesaMapper.toResponseDTO(despesa);
     }
@@ -79,7 +80,7 @@ public class DespesaService {
 
         Despesa despesa = despesaRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Despesa não encontrada"));
+                        new ResourceNotFoundException("Despesa não encontrada"));
 
         despesa.setValor(dto.getValor());
         despesa.setDescricao(dto.getDescricao());
@@ -96,7 +97,7 @@ public class DespesaService {
 
         Despesa despesa = despesaRepository.findById(id)
                 .orElseThrow(() ->
-                        new RuntimeException("Despesa não encontrada"));
+                        new ResourceNotFoundException("Despesa não encontrada"));
 
         despesaRepository.delete(despesa);
     }

@@ -184,6 +184,11 @@ public class AgendamentoService {
             throw new ResourceNotFoundException("Agendamento não encontrado");
         }
 
+        if (ordemServicoRepository.existsByAgendamentoId(id)) {
+            throw new IllegalStateException(
+                    "Agendamento com Ordem de Serviço não pode ser excluído");
+        }
+
         agendamentoRepository.deleteById(id);
     }
 
