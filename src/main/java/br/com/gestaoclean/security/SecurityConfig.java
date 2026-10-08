@@ -62,6 +62,9 @@ public class SecurityConfig {
                         .requestMatchers("/pagamentos/**", "/despesas/**")
                         .hasRole("ADMIN")
 
+                        .requestMatchers("/dashboard/**")
+                        .hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(
